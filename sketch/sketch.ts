@@ -113,32 +113,49 @@ Sketches.mouseFromCenter = p => {
 
 Sketches.randomMovers = p => {
     let movers: Array<Mover>
+    let tick: number
 
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
         p.background(255)
         movers = _.times(100).map(() => {
-            const location = p.createVector(p.int(p.random(p.width)), p.int(p.random(p.height)))
-            const velocity = p.createVector(p.random(2, -2), p.random(2, -2))
-            return new Mover(p, location, velocity)
+            const location = p.createVector(p.random(p.width), p.random(p.height))
+            const velocity = p.createVector(0)
+            const acceleration = p.createVector(p.random(1.2, .8), p.random(1.2, .8))
+            return new Mover(p, location, velocity, acceleration)
         })
+        tick = 0
     }
 
     p.draw = function () {
         p.background(255)
         movers.forEach(m => {
-            m.update()
+            m.update(tick)
             m.display()
         })
+        tick++
+        console.log(tick);
+
     }
 }
 
 
 class Mover {
-    constructor(private p: p5, private location: p5.Vector, private velocity: p5.Vector, private radius = 8) { }
+    constructor(
+        private p: p5,
+        private location: p5.Vector,
+        private velocity: p5.Vector,
+        private acceleration: p5.Vector,
+        private radius = 8
+    ) { }
 
-    update() {
+    update(tick: number) {
+        if (tick % 2) {
+            this.acceleration = p.createVector(p.random(1.2, .8), p.random(1.2, .8))
+        }
+        this.velocity = p5.Vector.add(this.acceleration, this.velocity)
         this.location = p5.Vector.add(this.location, this.velocity)
+
         this.location.x = wrapDimension(this.location.x, this.p.width)
         this.location.y = wrapDimension(this.location.y, this.p.height)
     }
