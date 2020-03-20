@@ -112,7 +112,7 @@ Sketches.mouseFromCenter = p => {
 }
 
 Sketches.randomMovers = p => {
-    let movers: Array<Mover>
+    let movers: Array<RandomMover>
 
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
@@ -120,7 +120,7 @@ Sketches.randomMovers = p => {
         movers = _.times(10).map(() => {
             const location = p.createVector(p.random(p.width), p.random(p.height))
             const velocity = p.createVector(0, 0)
-            return new Mover(p, location, velocity)
+            return new RandomMover(p, location, velocity)
         })
     }
 
@@ -134,7 +134,7 @@ Sketches.randomMovers = p => {
 }
 
 
-class Mover {
+class RandomMover {
     constructor(
         private p: p5,
         private location: p5.Vector,
@@ -163,4 +163,50 @@ class Mover {
 
 function wrapDimension(loc: number, size: number) {
     return (loc % size + size) % size
+}
+
+
+Sketches.accelerateTowardsMouse = p => {
+    let movers: Array<GravityMover>
+
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight)
+        p.background(255)
+        movers = _.times(10).map(() => {
+            const location = p.createVector(p.random(p.width), p.random(p.height))
+            return new GravityMover(p, location)
+        })
+    }
+
+    p.draw = function () {
+        p.background(255)
+        const mouse = p.createVector(p.mouseX, p.mouseY)
+        movers.forEach(m => {
+            m.update(mouse)
+            m.draw()
+        })
+    }
+}
+
+class GravityMover {
+    constructor(
+        private p: p5,
+        private location: p5.Vector,
+        private magnitude: number,
+        private radius = 8
+    ) { }
+
+    update(point: p5.Vector) {
+        const acceleration = p5.Vector.sub(point, this.location).normalize()
+        const velocity = p5.Vector.mult(acceleration, this.magnitude)
+        this.location = p5.Vector.add(velocity, this.location)
+    }
+
+    draw() {
+        this.p.stroke(0)
+        this.p.fill(175)
+
+        const diameter = this.radius * 2
+        this.p.ellipse(this.location.x, this.location.y, diameter, diameter)
+    }
 }
