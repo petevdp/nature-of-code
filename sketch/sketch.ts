@@ -117,11 +117,10 @@ Sketches.randomMovers = p => {
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
         p.background(255)
-        movers = _.times(100).map(() => {
+        movers = _.times(10).map(() => {
             const location = p.createVector(p.random(p.width), p.random(p.height))
-            const velocity = p.createVector(0)
-            const acceleration = p.createVector(p.random(.2, -.8), p.random(.1, -.9))
-            return new Mover(p, location, velocity, acceleration)
+            const velocity = p.createVector(0, 0)
+            return new Mover(p, location, velocity)
         })
     }
 
@@ -140,12 +139,12 @@ class Mover {
         private p: p5,
         private location: p5.Vector,
         private velocity: p5.Vector,
-        private acceleration: p5.Vector,
         private radius = 8
     ) { }
 
     update() {
-        this.velocity = p5.Vector.add(this.acceleration, this.velocity)
+        const acceleration = this.p.createVector(this.p.random(-1, 1), this.p.random(-1, 1))
+        this.velocity = p5.Vector.add(acceleration, this.velocity)
         this.velocity.limit(10)
         this.location = p5.Vector.add(this.location, this.velocity)
 
