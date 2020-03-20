@@ -174,7 +174,8 @@ Sketches.accelerateTowardsMouse = p => {
         p.background(255)
         movers = _.times(10).map(() => {
             const location = p.createVector(p.random(p.width), p.random(p.height))
-            return new GravityMover(p, location)
+            const magnitude = p.random(.1, 1)
+            return new GravityMover(p, location, magnitude)
         })
     }
 
@@ -189,17 +190,20 @@ Sketches.accelerateTowardsMouse = p => {
 }
 
 class GravityMover {
+    private velocity: p5.Vector
     constructor(
         private p: p5,
         private location: p5.Vector,
         private magnitude: number,
         private radius = 8
-    ) { }
+    ) {
+        this.velocity = p.createVector(0, 0)
+    }
 
     update(point: p5.Vector) {
-        const acceleration = p5.Vector.sub(point, this.location).normalize()
-        const velocity = p5.Vector.mult(acceleration, this.magnitude)
-        this.location = p5.Vector.add(velocity, this.location)
+        const direction = p5.Vector.sub(point, this.location).normalize()
+        this.velocity.add(p5.Vector.mult(direction, this.magnitude))
+        this.location = p5.Vector.add(this.velocity, this.location)
     }
 
     draw() {
