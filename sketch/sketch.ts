@@ -29,3 +29,40 @@ Sketches.randomBarGraph = (p: p5) => {
         })
     }
 }
+
+Sketches.randomWalk = (p) => {
+    let walker: Walker;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight)
+        walker = new Walker(p)
+    }
+
+    p.draw = function () {
+        walker.step();
+        walker.display()
+    }
+}
+class Walker {
+    p: p5;
+    x: number;
+    y: number;
+
+    constructor(p: p5) {
+        this.p = p;
+        this.x = p.width / 2
+        this.y = p.height / 2
+    }
+
+    display() {
+        this.p.stroke(0);
+        this.p.point(this.x, this.y)
+    }
+
+    step() {
+        const stepX = this.p.random(-1, 1)
+        const stepY = this.p.random(-1, 1)
+        this.x += stepX
+        this.y += stepY
+    }
+
+}
