@@ -110,3 +110,48 @@ Sketches.mouseFromCenter = p => {
         p.line(0, 0, diff.x, diff.y)
     }
 }
+
+Sketches.randomMovers = p => {
+    let movers: Array<Mover>
+
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight)
+        p.background(255)
+        movers = _.times(100).map(() => {
+            const location = p.createVector(p.int(p.random(p.width)), p.int(p.random(p.height)))
+            const velocity = p.createVector(p.random(2, -2), p.random(2, -2))
+            return new Mover(p, location, velocity)
+        })
+    }
+
+    p.draw = function () {
+        p.background(255)
+        movers.forEach(m => {
+            m.update()
+            m.display()
+        })
+    }
+}
+
+
+class Mover {
+    constructor(private p: p5, private location: p5.Vector, private velocity: p5.Vector, private radius = 8) { }
+
+    update() {
+        this.location = p5.Vector.add(this.location, this.velocity)
+        this.location.x = wrapDimension(this.location.x, this.p.width)
+        this.location.y = wrapDimension(this.location.y, this.p.height)
+    }
+
+    display() {
+        this.p.stroke(0)
+        this.p.fill(175)
+        const diameter = this.radius * 2
+        this.p.ellipse(this.location.x, this.location.y, diameter, diameter)
+    }
+
+}
+
+function wrapDimension(loc: number, size: number) {
+    return (loc % size + size) % size
+}

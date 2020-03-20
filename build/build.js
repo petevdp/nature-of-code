@@ -138,6 +138,47 @@ Sketches.mouseFromCenter = p => {
         p.line(0, 0, diff.x, diff.y);
     };
 };
+Sketches.randomMovers = p => {
+    let movers;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        p.background(255);
+        movers = _.times(100).map(() => {
+            const location = p.createVector(p.int(p.random(p.width)), p.int(p.random(p.height)));
+            const velocity = p.createVector(p.random(2, -2), p.random(2, -2));
+            return new Mover(p, location, velocity);
+        });
+    };
+    p.draw = function () {
+        p.background(255);
+        movers.forEach(m => {
+            m.update();
+            m.display();
+        });
+    };
+};
+class Mover {
+    constructor(p, location, velocity, radius = 8) {
+        this.p = p;
+        this.location = location;
+        this.velocity = velocity;
+        this.radius = radius;
+    }
+    update() {
+        this.location = p5.Vector.add(this.location, this.velocity);
+        this.location.x = wrapDimension(this.location.x, this.p.width);
+        this.location.y = wrapDimension(this.location.y, this.p.height);
+    }
+    display() {
+        this.p.stroke(0);
+        this.p.fill(175);
+        const diameter = this.radius * 2;
+        this.p.ellipse(this.location.x, this.location.y, diameter, diameter);
+    }
+}
+function wrapDimension(loc, size) {
+    return (loc % size + size) % size;
+}
 const CHOSEN_SKETCH_KEY = "chosenSketch";
 let p;
 window.onload = function () {
