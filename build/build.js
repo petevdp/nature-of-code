@@ -123,6 +123,21 @@ Sketches.bouncingBall = p => {
         p.ellipse(location.x, location.y, ballRadius * 2, ballRadius * 2);
     };
 };
+Sketches.mouseFromCenter = p => {
+    let center;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        p.background(255);
+        center = p.createVector(p.width / 2, p.height / 2);
+    };
+    p.draw = function () {
+        p.background(255);
+        const mouse = p.createVector(p.mouseX, p.mouseY);
+        const diff = p5.Vector.sub(mouse, center);
+        p.translate(p.width / 2, p.height / 2);
+        p.line(0, 0, diff.x, diff.y);
+    };
+};
 const CHOSEN_SKETCH_KEY = "chosenSketch";
 let p;
 window.onload = function () {
