@@ -1,4 +1,5 @@
 const CHOSEN_SKETCH_KEY = "chosenSketch"
+let p: p5
 
 window.onload = function () {
     const sketchSelect = document.getElementById('sketchSelect') as HTMLSelectElement;
@@ -31,7 +32,7 @@ window.onload = function () {
 
     function renderSketch(sketch: sketch) {
         clearChildren(sketchContainer)
-        new p5(sketch, sketchContainer)
+        p = new p5(sketch, sketchContainer)
     }
 }
 
