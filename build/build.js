@@ -1,10 +1,8 @@
-var ColorHelper = (function () {
-    function ColorHelper() {
-    }
-    ColorHelper.getColorVector = function (c) {
+class ColorHelper {
+    static getColorVector(c) {
         return createVector(red(c), green(c), blue(c));
-    };
-    ColorHelper.rainbowColorBase = function () {
+    }
+    static rainbowColorBase() {
         return [
             color('red'),
             color('orange'),
@@ -14,16 +12,14 @@ var ColorHelper = (function () {
             color('indigo'),
             color('violet')
         ];
-    };
-    ColorHelper.getColorsArray = function (total, baseColorArray) {
-        var _this = this;
-        if (baseColorArray === void 0) { baseColorArray = null; }
+    }
+    static getColorsArray(total, baseColorArray = null) {
         if (baseColorArray == null) {
             baseColorArray = ColorHelper.rainbowColorBase();
         }
-        var rainbowColors = baseColorArray.map(function (x) { return _this.getColorVector(x); });
+        var rainbowColors = baseColorArray.map(x => this.getColorVector(x));
         ;
-        var colours = new Array();
+        let colours = new Array();
         for (var i = 0; i < total; i++) {
             var colorPosition = i / total;
             var scaledColorPosition = colorPosition * (rainbowColors.length - 1);
@@ -33,23 +29,20 @@ var ColorHelper = (function () {
             colours.push(color(nameColor.x, nameColor.y, nameColor.z));
         }
         return colours;
-    };
-    ColorHelper.getColorByPercentage = function (firstColor, secondColor, percentage) {
+    }
+    static getColorByPercentage(firstColor, secondColor, percentage) {
         var firstColorCopy = firstColor.copy();
         var secondColorCopy = secondColor.copy();
         var deltaColor = secondColorCopy.sub(firstColorCopy);
         var scaledDeltaColor = deltaColor.mult(percentage);
         return firstColorCopy.add(scaledDeltaColor);
-    };
-    return ColorHelper;
-}());
-var Shapes = (function () {
-    function Shapes() {
     }
-    Shapes.star = function (x, y, radius1, radius2, npoints) {
+}
+class Shapes {
+    static star(x, y, radius1, radius2, npoints) {
         var angle = TWO_PI / npoints;
         var halfAngle = angle / 2.0;
-        var points = new Array();
+        const points = new Array();
         for (var a = 0; a < TWO_PI; a += angle) {
             var sx = x + cos(a) * radius2;
             var sy = y + sin(a) * radius2;
@@ -59,33 +52,62 @@ var Shapes = (function () {
             points.push(createVector(sx, sy));
         }
         return points;
-    };
-    return Shapes;
-}());
-var angle = 0;
-var squares = 10;
-var colors;
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    rectMode(CENTER);
-    colors = ColorHelper.getColorsArray(squares);
+    }
 }
-function draw() {
-    background(51);
-    translate((width / 2), (height / 2));
-    angle = angle + 0.01;
-    rotate(angle);
-    for (var i = 0; i < squares; i++) {
-        strokeWeight(2);
-        stroke(colors[i]);
-        noFill();
-        beginShape();
-        var points = Shapes.star(0, 0, 10 * i, 20 * i, 5);
-        for (var x = 0; x < points.length; x++) {
-            var v = points[x];
-            vertex(v.x, v.y);
-        }
-        endShape(CLOSE);
+const Sketches = {};
+Sketches.someOtherThing = (p) => {
+};
+Sketches.randomBarGraph = (p) => {
+    let randomCounts;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        randomCounts = _.times(20).map(() => 0);
+        p.background(255);
+        p.stroke(0);
+        p.fill(200);
+    };
+    p.draw = function () {
+        const index = p.int(p.random(randomCounts.length));
+        randomCounts[index]++;
+        const w = p.width / randomCounts.length;
+        randomCounts.forEach((c, i) => {
+            p.rect(i * w, p.height - c, w - 1, c);
+        });
+    };
+};
+const CHOSEN_SKETCH_KEY = "chosenSketch";
+window.onload = function () {
+    const sketchSelect = document.getElementById('sketchSelect');
+    for (let sketchKey in Sketches) {
+        const option = document.createElement("option");
+        option.value = sketchKey;
+        option.innerText = _.startCase(sketchKey);
+        sketchSelect.appendChild(option);
+    }
+    sketchSelect.onchange = function (event) {
+        const selected = sketchSelect.selectedOptions[0].value;
+        localStorage.setItem(CHOSEN_SKETCH_KEY, selected);
+        renderSketch(Sketches[selected]);
+    };
+    let selectedSketchKey;
+    if (localStorage.getItem(CHOSEN_SKETCH_KEY)) {
+        selectedSketchKey = localStorage.getItem(CHOSEN_SKETCH_KEY);
+        sketchSelect.value = selectedSketchKey;
+    }
+    else {
+        selectedSketchKey = sketchSelect.value;
+    }
+    const sketchToRender = Sketches[selectedSketchKey];
+    const sketchContainer = document.getElementById('sketchContainer');
+    renderSketch(sketchToRender);
+    function renderSketch(sketch) {
+        clearChildren(sketchContainer);
+        new p5(sketch, sketchContainer);
+    }
+};
+function clearChildren(element) {
+    while (element.lastChild) {
+        element.removeChild(element.lastChild);
     }
 }
 //# sourceMappingURL=build.js.map

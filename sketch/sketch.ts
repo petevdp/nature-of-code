@@ -1,33 +1,31 @@
-let angle = 0;
-let squares = 10;
-let colors: p5.Color[];
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    rectMode(CENTER);
-    colors = ColorHelper.getColorsArray(squares);
+type sketch = (p: p5) => any
+interface Sketches {
+    [key: string]: sketch
 }
 
-function draw() {
+const Sketches: Sketches = {};
 
-    background(51);
+Sketches.someOtherThing = (p: p5) => {
+}
 
-    translate((width / 2), (height / 2));
-    angle = angle + 0.01;
-    rotate(angle);
-
-    for (var i = 0; i < squares; i++) {
-        strokeWeight(2);
-        stroke(colors[i]);
-        noFill();
-        beginShape();
-
-        let points = Shapes.star(0, 0, 10 * i, 20 * i, 5);
-        for (var x = 0; x < points.length; x++) {
-            var v = points[x]
-            vertex(v.x, v.y);
-        }
-        endShape(CLOSE);
+Sketches.randomBarGraph = (p: p5) => {
+    let randomCounts: Array<number>;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight)
+        randomCounts = _.times(20).map(() => 0)
+        p.background(255)
+        p.stroke(0)
+        p.fill(200)
     }
 
+    p.draw = function () {
+        const index = p.int(p.random(randomCounts.length));
+        randomCounts[index]++;
+
+        const w = p.width / randomCounts.length;
+
+        randomCounts.forEach((c, i) => {
+            p.rect(i * w, p.height - c, w - 1, c)
+        })
+    }
 }
