@@ -66,8 +66,8 @@ class Walker {
 }
 
 Sketches.bouncingBall = p => {
-    let location = [100, 100]
-    const speed = [5.5, 3.3]
+    let location = p.createVector(100, 100)
+    const speed = p.createVector(5.5, 3.3)
     const ballRadius = 20
 
     p.setup = function () {
@@ -77,18 +77,16 @@ Sketches.bouncingBall = p => {
 
     p.draw = function () {
         p.background(255)
-        location = _.zip(location, speed).map(([l, s], i) => l + s)
+        location = p5.Vector.add(location, speed)
 
-        const [x, y] = location
-
-        if (x > (p.width - ballRadius) || x < (0 + ballRadius)) {
-            speed[0] *= -1
+        if (location.x > (p.width - ballRadius) || location.x < (0 + ballRadius)) {
+            speed.x *= -1
         }
-        if (y > (p.height - ballRadius) || y < (0 + ballRadius)) {
-            speed[1] *= -1
+        if (location.y > (p.height - ballRadius) || location.y < (0 + ballRadius)) {
+            speed.y *= -1
         }
         p.stroke(0)
         p.fill(175)
-        p.ellipse(x, y, ballRadius * 2, ballRadius * 2)
+        p.ellipse(location.x, location.y, ballRadius * 2, ballRadius * 2)
     }
 }
