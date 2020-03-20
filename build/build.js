@@ -182,15 +182,15 @@ class RandomMover {
 function wrapDimension(loc, size) {
     return (loc % size + size) % size;
 }
-Sketches.accelerateTowardsMouse = p => {
+Sketches.gravityMouse = p => {
     let movers;
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.background(255);
-        movers = _.times(10).map(() => {
+        movers = _.times(100).map(() => {
             const location = p.createVector(p.random(p.width), p.random(p.height));
-            const magnitude = p.random(.1, 1);
-            return new GravityMover(p, location, magnitude);
+            const gravity = .2;
+            return new GravityMover(p, location, gravity);
         });
     };
     p.draw = function () {
@@ -203,16 +203,19 @@ Sketches.accelerateTowardsMouse = p => {
     };
 };
 class GravityMover {
-    constructor(p, location, magnitude, radius = 8) {
+    constructor(p, location, gravity, radius = 8) {
         this.p = p;
         this.location = location;
-        this.magnitude = magnitude;
+        this.gravity = gravity;
         this.radius = radius;
         this.velocity = p.createVector(0, 0);
     }
     update(point) {
-        const direction = p5.Vector.sub(point, this.location).normalize();
-        this.velocity.add(p5.Vector.mult(direction, this.magnitude));
+        const diff = p5.Vector.sub(point, this.location);
+        const direction = diff.normalize();
+        const distance = diff.mag();
+        const acceleration = this.gravity * (1 / distance ** 2);
+        this.velocity.add(p5.Vector.mult(direction, acceleration));
         this.location = p5.Vector.add(this.velocity, this.location);
     }
     draw() {

@@ -166,16 +166,16 @@ function wrapDimension(loc: number, size: number) {
 }
 
 
-Sketches.accelerateTowardsMouse = p => {
+Sketches.gravityMouse = p => {
     let movers: Array<GravityMover>
 
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
         p.background(255)
-        movers = _.times(10).map(() => {
+        movers = _.times(100).map(() => {
             const location = p.createVector(p.random(p.width), p.random(p.height))
-            const magnitude = p.random(.1, 1)
-            return new GravityMover(p, location, magnitude)
+            const gravity = .2
+            return new GravityMover(p, location, gravity)
         })
     }
 
@@ -194,15 +194,20 @@ class GravityMover {
     constructor(
         private p: p5,
         private location: p5.Vector,
-        private magnitude: number,
+        private gravity: number,
         private radius = 8
     ) {
         this.velocity = p.createVector(0, 0)
     }
 
     update(point: p5.Vector) {
-        const direction = p5.Vector.sub(point, this.location).normalize()
-        this.velocity.add(p5.Vector.mult(direction, this.magnitude))
+        const diff = p5.Vector.sub(point, this.location)
+        const direction = diff.normalize()
+        const distance = diff.mag()
+
+        const acceleration = this.gravity * (1 / distance ** 2)
+
+        this.velocity.add(p5.Vector.mult(direction, acceleration))
         this.location = p5.Vector.add(this.velocity, this.location)
     }
 
