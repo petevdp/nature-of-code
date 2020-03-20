@@ -55,9 +55,7 @@ class Shapes {
     }
 }
 const Sketches = {};
-Sketches.someOtherThing = (p) => {
-};
-Sketches.randomBarGraph = (p) => {
+Sketches.randomBarGraph = p => {
     let randomCounts;
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -75,7 +73,59 @@ Sketches.randomBarGraph = (p) => {
         });
     };
 };
+Sketches.randomWalk = p => {
+    let walker;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        walker = new Walker(p);
+    };
+    p.draw = function () {
+        walker.step();
+        walker.display();
+    };
+};
+class Walker {
+    constructor(p) {
+        this.p = p;
+        this.x = p.width / 2;
+        this.y = p.height / 2;
+    }
+    display() {
+        this.p.stroke(0);
+        this.p.point(this.x, this.y);
+    }
+    step() {
+        const stepX = this.p.random(-1, 1);
+        const stepY = this.p.random(-1, 1);
+        this.x += stepX;
+        this.y += stepY;
+    }
+}
+Sketches.bouncingBall = p => {
+    let location = [100, 100];
+    const speed = [5.5, 3.3];
+    const ballRadius = 20;
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        p.background(255);
+    };
+    p.draw = function () {
+        p.background(255);
+        location = _.zip(location, speed).map(([l, s], i) => l + s);
+        const [x, y] = location;
+        if (x > (p.width - ballRadius) || x < (0 + ballRadius)) {
+            speed[0] *= -1;
+        }
+        if (y > (p.height - ballRadius) || y < (0 + ballRadius)) {
+            speed[1] *= -1;
+        }
+        p.stroke(0);
+        p.fill(175);
+        p.ellipse(x, y, ballRadius * 2, ballRadius * 2);
+    };
+};
 const CHOSEN_SKETCH_KEY = "chosenSketch";
+let p;
 window.onload = function () {
     const sketchSelect = document.getElementById('sketchSelect');
     for (let sketchKey in Sketches) {
@@ -102,7 +152,7 @@ window.onload = function () {
     renderSketch(sketchToRender);
     function renderSketch(sketch) {
         clearChildren(sketchContainer);
-        new p5(sketch, sketchContainer);
+        p = new p5(sketch, sketchContainer);
     }
 };
 function clearChildren(element) {
