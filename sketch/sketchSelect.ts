@@ -2,7 +2,7 @@ const CHOSEN_SKETCH_KEY = "chosenSketch"
 let p: p5
 
 window.onload = function () {
-    const sketchSelect = document.getElementById('sketchSelect') as HTMLSelectElement;
+    const sketchSelect = document.getElementById('sketchSelect') as HTMLSelectElement
 
     for (let sketchKey in Sketches) {
         const option = document.createElement("option")

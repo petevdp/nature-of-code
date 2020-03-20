@@ -5,10 +5,7 @@ interface Sketches {
 
 const Sketches: Sketches = {};
 
-Sketches.someOtherThing = (p: p5) => {
-}
-
-Sketches.randomBarGraph = (p: p5) => {
+Sketches.randomBarGraph = p => {
     let randomCounts: Array<number>;
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
@@ -30,7 +27,7 @@ Sketches.randomBarGraph = (p: p5) => {
     }
 }
 
-Sketches.randomWalk = (p) => {
+Sketches.randomWalk = p => {
     let walker: Walker;
     p.setup = function () {
         p.createCanvas(p.windowWidth, p.windowHeight)
@@ -42,10 +39,11 @@ Sketches.randomWalk = (p) => {
         walker.display()
     }
 }
+
 class Walker {
-    p: p5;
-    x: number;
-    y: number;
+    p: p5
+    x: number
+    y: number
 
     constructor(p: p5) {
         this.p = p;
@@ -65,4 +63,32 @@ class Walker {
         this.y += stepY
     }
 
+}
+
+Sketches.bouncingBall = p => {
+    let x = 100;
+    let y = 100;
+    let xSpeed = 5.5
+    let ySpeed = 3.3
+
+    p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight)
+        p.background(255)
+    }
+
+    p.draw = function () {
+        p.background(255)
+        x = x + xSpeed
+        y = y + ySpeed
+
+        if (x > p.width || x < 0) {
+            xSpeed = -xSpeed
+        }
+        if (y > p.height || y < 0) {
+            ySpeed = -ySpeed
+        }
+        p.stroke(0)
+        p.fill(175)
+        p.ellipse(x, y, 16, 16)
+    }
 }
