@@ -5,17 +5,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p start-compile start-run",
-    "start-compile": "tsc --watch",
-    "start-run": "browser-sync start --server -w"
+    "start-compile": "rollup -c ./rollup.config.js --watch",
+    "start-run": "browser-sync start -c ./bs-config.js"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-typescript": "^4.0.0",
+    "@types/lodash": "^4.14.149",
     "@types/p5": "^0.9.0",
-    "npm-run-all": "^4.1.5",
     "browser-sync": "^2.26.7",
-    "typescript": "^3.6.3"
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.1.0",
+    "systemjs": "^6.2.6",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.149",
-    "lodash": "^4.17.15"
+    "@types/lodash-es": "^4.17.3",
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15",
+    "p5": "^1.0.0",
+    "tslib": "^1.11.1"
   }
 }

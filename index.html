@@ -1,37 +1,31 @@
 <html>
-
-<head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-
-    <script src="build/build.js"></script>
-
-    <link rel="shortcut icon" href="https://p5js.org/assets/img/favicon.ico">
-    <link rel="icon" href="https://p5js.org/assets/img/favicon.ico">
+  <head>
+    <script type="importmap">
+      {
+        "imports": {}
+      }
+    </script>
+    <script type="module" src="/build/main.js"></script>
+    <link rel="shortcut icon" href="https://p5js.org/assets/img/favicon.ico" />
+    <link rel="icon" href="https://p5js.org/assets/img/favicon.ico" />
 
     <style>
-        * {
-            padding: 0px;
-            margin: 0px;
-        }
+      * {
+        padding: 0px;
+        margin: 0px;
+      }
 
-        #sketchSelect {
-            position: fixed;
-            top: 3px;
-            left: 3px;
-            font-size: 16px;
-        }
+      #sketchSelect {
+        position: fixed;
+        top: 3px;
+        left: 3px;
+        font-size: 16px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <select id="sketchSelect">
-    </select>
-    <!-- Canvas will be appended here -->
-    <section id="sketchContainer">
-    </section>
-</body>
-
+  <body>
+    <select id="sketchSelect"> </select>
+    <section id="sketchContainer"></section>
+  </body>
 </html>
