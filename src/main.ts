@@ -2,7 +2,7 @@ import p5 from "p5";
 import _ from "lodash-es";
 
 import { sketch, LifecycleSketch, simpleSketch } from "./sketch";
-import { Sketches } from "./sketches";
+import { sketches } from "./sketches";
 
 const CHOSEN_SKETCH_KEY = "chosenSketch";
 
@@ -13,7 +13,7 @@ window.onload = function() {
   let currentSketch: sketch;
   let currentSketchKey: string;
 
-  for (let sketchKey in Sketches) {
+  for (let sketchKey in sketches) {
     const option = document.createElement("option");
     option.value = sketchKey;
     option.innerText = _.startCase(sketchKey);
@@ -26,7 +26,7 @@ window.onload = function() {
     console.log("selected: ", selected);
     localStorage.setItem(CHOSEN_SKETCH_KEY, selected);
     currentSketchKey = selected;
-    renderSketch(Sketches[selected]);
+    renderSketch(sketches[selected]);
   };
 
   let selectedSketchKey;
@@ -37,7 +37,7 @@ window.onload = function() {
     selectedSketchKey = sketchSelect.value;
   }
 
-  const sketchToRender = Sketches[selectedSketchKey];
+  const sketchToRender = sketches[selectedSketchKey];
   const sketchContainer = document.getElementById("sketchContainer");
 
   currentSketchKey = selectedSketchKey;

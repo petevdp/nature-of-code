@@ -3,17 +3,19 @@ import _ from "lodash";
 
 import { sketch } from "./sketch";
 import { gravityMouse } from "./gravityMouse";
+import { nBodyGravityMovers } from "./nBodyGravityMover";
 
 interface Sketches {
   [key: string]: sketch;
 }
 
-const Sketches: Sketches = {
-  gravityMouse
+const sketches: Sketches = {
+  gravityMouse,
+  nBodyGravityMovers
 };
-export { Sketches };
+export { sketches };
 
-Sketches.randomBarGraph = p => {
+sketches.randomBarGraph = p => {
   let randomCounts: Array<number>;
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -35,7 +37,7 @@ Sketches.randomBarGraph = p => {
   };
 };
 
-Sketches.randomWalk = p => {
+sketches.randomWalk = p => {
   let walker: Walker;
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -72,7 +74,7 @@ class Walker {
   }
 }
 
-Sketches.bouncingBall = p => {
+sketches.bouncingBall = p => {
   let location = p.createVector(100, 100);
   const speed = p.createVector(5.5, 3.3);
   const ballRadius = 20;
@@ -98,7 +100,7 @@ Sketches.bouncingBall = p => {
   };
 };
 
-Sketches.mouseFromCenter = p => {
+sketches.mouseFromCenter = p => {
   let center: p5.Vector;
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -116,7 +118,7 @@ Sketches.mouseFromCenter = p => {
   };
 };
 
-Sketches.randomMovers = p => {
+sketches.randomMovers = p => {
   let movers: Array<RandomMover>;
 
   p.setup = function() {
