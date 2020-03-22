@@ -10,6 +10,10 @@ window.onload = function() {
   const sketchSelect = document.getElementById(
     "sketchSelect"
   ) as HTMLSelectElement;
+  const resetButton = document.getElementById(
+    "resetSketch"
+  ) as HTMLButtonElement;
+
   let currentSketch: sketch;
   let currentSketchKey: string;
 
@@ -26,7 +30,11 @@ window.onload = function() {
     console.log("selected: ", selected);
     localStorage.setItem(CHOSEN_SKETCH_KEY, selected);
     currentSketchKey = selected;
-    renderSketch(sketches[selected]);
+    loadSketch(sketches[selected]);
+  };
+
+  resetButton.onclick = function() {
+    loadSketch(currentSketch);
   };
 
   let selectedSketchKey;
@@ -41,9 +49,9 @@ window.onload = function() {
   const sketchContainer = document.getElementById("sketchContainer");
 
   currentSketchKey = selectedSketchKey;
-  renderSketch(sketchToRender);
+  loadSketch(sketchToRender);
 
-  function renderSketch(sketch: sketch) {
+  function loadSketch(sketch: sketch) {
     if (typeof currentSketch === "object") {
       (currentSketch as LifecycleSketch).teardown();
     }

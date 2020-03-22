@@ -15,7 +15,7 @@
         margin: 0px;
       }
 
-      #sketchSelect {
+      #controlPanel {
         position: fixed;
         top: 3px;
         left: 3px;
@@ -25,7 +25,10 @@
   </head>
 
   <body>
-    <select id="sketchSelect"> </select>
+    <div id="controlPanel">
+      <select id="sketchSelect"></select>
+      <button id="resetSketch">Reset</button>
+    </div>
     <section id="sketchContainer"></section>
   </body>
 </html>
