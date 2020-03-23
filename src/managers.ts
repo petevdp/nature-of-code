@@ -1,4 +1,5 @@
 import p5 from "p5";
+import { startCase } from "lodash-es";
 import { sketches, Sketches } from "./sketches";
 import { Sketch, sketchFunction, RunningSketch } from "./sketch";
 
@@ -45,7 +46,7 @@ export class SketchManager {
     window.p = runningSketch.p5Instance;
   }
 
-  reloadSketch() {
+  reloadCurrentSketch() {
     this.loadSketch(this.activeSketchEntry.key);
   }
 
@@ -76,6 +77,7 @@ export class ControlPanelManager {
     [...this.sketchManager.sketchKeys.entries()].forEach(([key]) => {
       const option = document.createElement("option");
       option.value = key;
+      option.innerText = startCase(key);
       element.appendChild(option);
     });
     element.onchange = () => {
@@ -86,7 +88,7 @@ export class ControlPanelManager {
 
   private initReset() {
     this.elements.reset.onclick = () => {
-      this.sketchManager.reloadSketch();
+      this.sketchManager.reloadCurrentSketch();
     };
   }
 }
