@@ -50,10 +50,10 @@ export class SketchManager {
     this.loadSketch(this.activeSketchEntry.key);
   }
 
-  private set persistSketchKey(key) {
+  set persistSketchKey(key) {
     localStorage[this.localStorageSketchKey] = key;
   }
-  private get persistSketchKey() {
+  get persistSketchKey() {
     return localStorage[this.localStorageSketchKey];
   }
 }
@@ -74,12 +74,17 @@ export class ControlPanelManager {
 
   private initSelect() {
     const element = this.elements.select;
+    const selectedKey = this.sketchManager.persistSketchKey;
     [...this.sketchManager.sketchKeys.entries()].forEach(([key]) => {
       const option = document.createElement("option");
       option.value = key;
       option.innerText = startCase(key);
+      if (selectedKey === key) {
+        option.selected = true;
+      }
       element.appendChild(option);
     });
+
     element.onchange = () => {
       const selected = element.selectedOptions[0].value;
       this.sketchManager.loadSketch(selected);
