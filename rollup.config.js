@@ -6,9 +6,11 @@ import commonjs from "@rollup/plugin-commonjs";
 export default {
   input: "src/main.ts",
   output: {
-    dir: "build",
+    file: "build/build.js",
     format: "es",
     sourcemap: true
   },
-  plugins: [typescript(), resolve(), commonjs()]
+  map: {},
+  plugins: [commonjs(), resolve(), typescript()]
+  // external: ["lodash-es", "p5"]
 };

@@ -1,14 +1,14 @@
 import p5 from "p5";
-import _ from "lodash";
+import { times } from "lodash-es";
 
-import { LifecycleSketch } from "./sketch";
+import { Sketch } from "./sketch";
 import { GravityMover } from "./gravity";
 
-class GravityMouse implements LifecycleSketch {
+class GravityMouse extends Sketch {
   private gravityPoint: p5.Vector;
   private onBlur: EventListener;
 
-  run(p: p5) {
+  protected _run(p: p5) {
     let movers: Array<GravityMover>;
     const gravity = 2.0;
     this.gravityPoint = p.createVector(p.width / 2, p.height / 2);
@@ -17,9 +17,9 @@ class GravityMouse implements LifecycleSketch {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.background(255);
 
-      movers = _.times(100).map(() => {
+      movers = times(100).map(() => {
         const location = p.createVector(p.random(p.width), p.random(p.height));
-        return new GravityMover(p, location, gravity);
+        return new GravityMover(p, location);
       });
     };
 

@@ -1,19 +1,19 @@
-import _ from "lodash";
+import { times } from "lodash-es";
 
-import { simpleSketch } from "./sketch";
+import { sketchFunction } from "./sketch";
 import { GravityMover } from "./gravity";
 
-const nBodyGravityMovers: simpleSketch = p => {
+const nBodyGravityMovers: sketchFunction = p => {
   let movers: Array<GravityMover>;
-  const gravity = 2.0;
+  const gravity = 0.5;
 
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.background(255);
 
-    movers = _.times(3).map(() => {
+    movers = times(15).map(() => {
       const location = p.createVector(p.random(p.width), p.random(p.height));
-      return new GravityMover(p, location, gravity);
+      return new GravityMover(p, location);
     });
   };
 

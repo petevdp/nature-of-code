@@ -10,7 +10,7 @@ export class GravityMover {
   constructor(
     private p: p5,
     public readonly location: p5.Vector,
-    private radius = 8
+    private radius = 16
   ) {
     this.velocity = p.createVector(0, 0);
   }

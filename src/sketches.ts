@@ -1,25 +1,25 @@
 import p5 from "p5";
-import _ from "lodash";
+import { times } from "lodash-es";
 
-import { sketch } from "./sketch";
+import { Sketch, sketchFunction } from "./sketch";
 import { gravityMouse } from "./gravityMouse";
 import { nBodyGravityMovers } from "./nBodyGravityMover";
 
 interface Sketches {
-  [key: string]: sketch;
+  [key: string]: Sketch | sketchFunction;
 }
 
 const sketches: Sketches = {
   gravityMouse,
   nBodyGravityMovers
 };
-export { sketches };
+export { sketches, Sketches };
 
 sketches.randomBarGraph = p => {
   let randomCounts: Array<number>;
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    randomCounts = _.times(20).map(() => 0);
+    randomCounts = times(20).map(() => 0);
     p.background(255);
     p.stroke(0);
     p.fill(200);
@@ -124,7 +124,7 @@ sketches.randomMovers = p => {
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.background(255);
-    movers = _.times(10).map(() => {
+    movers = times(100).map(() => {
       const location = p.createVector(p.random(p.width), p.random(p.height));
       const velocity = p.createVector(0, 0);
       return new RandomMover(p, location, velocity);
