@@ -12,5 +12,4 @@ export default {
   },
   map: {},
   plugins: [commonjs(), resolve(), typescript()]
-  // external: ["lodash-es", "p5"]
 };
