@@ -3,6 +3,7 @@ import { times } from "lodash-es";
 
 import { Sketch } from "./sketch";
 import { GravityMover } from "./gravity";
+import { Mover } from "./mover";
 
 class GravityMouse extends Sketch {
   private gravityPoint: p5.Vector;
@@ -19,7 +20,9 @@ class GravityMouse extends Sketch {
 
       movers = times(100).map(() => {
         const location = p.createVector(p.random(p.width), p.random(p.height));
-        return new GravityMover(p, location);
+        const velocity = p.createVector(0, 0);
+        const mover = new Mover(p, location, velocity);
+        return new GravityMover(mover);
       });
     };
 

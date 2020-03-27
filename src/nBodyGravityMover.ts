@@ -3,6 +3,7 @@ import { times } from "lodash-es";
 import { sketchFunction } from "./sketch";
 import { GravityMover, gravitySource, MovingGravitySource } from "./gravity";
 import p5 from "p5";
+import { Mover } from "./mover";
 
 const nBodyGravityMovers: sketchFunction = p => {
   const gravity = 0.5;
@@ -13,8 +14,10 @@ const nBodyGravityMovers: sketchFunction = p => {
     p.background(255);
 
     moverSources = times(3).map(() => {
-      const location = p.createVector(p.random(p.width), p.random(p.height));
-      return new MovingGravitySource(gravity, p, location);
+      const position = p.createVector(p.random(p.width), p.random(p.height));
+      const velocity = p.createVector(0, 0);
+      const mover = new Mover(p, position, velocity);
+      return new MovingGravitySource(mover, gravity);
     });
   };
 
@@ -26,7 +29,7 @@ const nBodyGravityMovers: sketchFunction = p => {
     });
 
     const posSum = moverSources.reduce(
-      (sum, m) => sum.add(m.location),
+      (sum, m) => sum.add(m.position),
       p.createVector(0, 0)
     );
 
@@ -40,8 +43,6 @@ const nBodyGravityMovers: sketchFunction = p => {
     moverSources.forEach(m => {
       m.draw(offset);
     });
-
-    console.log(moverSources.reduce((s, m) => s + m.energy(middle), 0));
   };
 };
 

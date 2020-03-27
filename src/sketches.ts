@@ -4,6 +4,7 @@ import { times } from "lodash-es";
 import { Sketch, sketchFunction } from "./sketch";
 import { gravityMouse } from "./gravityMouse";
 import { nBodyGravityMovers } from "./nBodyGravityMover";
+import { manyForces } from "./manyForces";
 
 interface Sketches {
   [key: string]: Sketch | sketchFunction;
@@ -11,7 +12,8 @@ interface Sketches {
 
 const sketches: Sketches = {
   gravityMouse,
-  nBodyGravityMovers
+  nBodyGravityMovers,
+  manyForces
 };
 export { sketches, Sketches };
 

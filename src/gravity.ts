@@ -1,66 +1,48 @@
 import p5 from "p5";
+import { Mover } from "./mover";
 
 export interface gravitySource {
   point: p5.Vector;
   magnitude: number;
 }
 
-interface gravityMoverInterface {
-  location: p5.Vector;
-  velocity: p5.Vector;
-  energy: (middle: p5.Vector) => number;
-  update: (sources: Array<gravitySource>) => void;
-  draw: (offset: null | p5.Vector) => void;
-}
+export class GravityMover {
+  constructor(protected mover: Mover) {}
 
-export class GravityMover implements gravityMoverInterface {
-  private _velocity: p5.Vector;
-  constructor(
-    private p: p5,
-    private _location: p5.Vector,
-    private radius = 16
-  ) {
-    this._velocity = p.createVector(0, 0);
-  }
-
-  get location() {
-    return this._location;
-  }
-
-  get velocity() {
-    return this._velocity;
+  get p() {
+    return this.mover.p;
   }
 
   energy(middle: p5.Vector) {
-    return p5.Vector.add(middle, this._location).mag();
+    return p5.Vector.add(middle, this.mover.position).mag();
   }
 
   update(sources: Array<gravitySource>) {
-    const acceleration = sources.reduce(
-      (d, s) => p5.Vector.add(d, this.getGravityAcceleration(s)),
-      this.p.createVector(0, 0)
+    const netForce = sources.reduce((acc, s) => {
+      const force = GravityMover.calcForceOfGravityOnMover(s, this.mover);
+      return p5.Vector.add(acc, force);
+    }, this.p.createVector(0, 0));
+    this.mover.update(netForce);
+  }
+
+  draw(offset: p5.Vector | null = null) {
+    this.mover.draw(offset);
+  }
+
+  get position() {
+    return this.mover.position;
+  }
+
+  static calcForceOfGravityOnMover(source: gravitySource, mover: Mover) {
+    const acceleration = GravityMover.calcGravityAcceleration(
+      source,
+      mover.position
     );
-    this._velocity = p5.Vector.add(this._velocity, acceleration);
-    this._location = p5.Vector.add(this._location, this._velocity);
+    return p5.Vector.mult(acceleration, mover.mass);
   }
 
-  draw(offset: null | p5.Vector = null) {
-    this.p.stroke(0);
-    this.p.fill(175);
-
-    const diameter = this.radius * 2;
-    let displayPos: p5.Vector;
-    if (offset) {
-      displayPos = p5.Vector.add(offset, this._location);
-    } else {
-      displayPos = this._location;
-    }
-
-    this.p.ellipse(displayPos.x, displayPos.y, diameter, diameter);
-  }
-
-  private getGravityAcceleration(source: gravitySource) {
-    const diff = p5.Vector.sub(source.point, this._location);
+  static calcGravityAcceleration(source: gravitySource, position: p5.Vector) {
+    const diff = p5.Vector.sub(source.point, position);
     const direction = diff.normalize();
     const distance = diff.mag();
 
@@ -73,19 +55,14 @@ export class GravityMover implements gravityMoverInterface {
 }
 
 export class MovingGravitySource extends GravityMover {
-  constructor(
-    public readonly gravity: number,
-    p: p5,
-    location: p5.Vector,
-    radius = 16
-  ) {
-    super(p, location, radius);
+  constructor(mover: Mover, private gravity: number) {
+    super(mover);
   }
 
   get source(): gravitySource {
     return {
-      point: this.location,
-      magnitude: this.gravity
+      point: this.mover.position,
+      magnitude: this.gravity * this.mover.mass
     };
   }
 }
