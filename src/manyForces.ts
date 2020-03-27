@@ -22,7 +22,9 @@ const manyForces: sketchFunction = p => {
       const position = p.createVector(p.random(p.width), p.random(p.height));
       const velocity = p.createVector(0, 0);
       const mass = p.random(1, 5);
-      return new WallBouncingMover(p, position, velocity, mass);
+      return new Mover(p, position, velocity, mass, {
+        edgeInteraction: "bounce"
+      });
     });
   };
 

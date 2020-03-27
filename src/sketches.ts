@@ -5,6 +5,7 @@ import { Sketch, sketchFunction } from "./sketch";
 import { gravityMouse } from "./gravityMouse";
 import { nBodyGravityMovers } from "./nBodyGravityMover";
 import { manyForces } from "./manyForces";
+import { Mover } from "./mover";
 
 interface Sketches {
   [key: string]: Sketch | sketchFunction;
@@ -121,7 +122,7 @@ sketches.mouseFromCenter = p => {
 };
 
 sketches.randomMovers = p => {
-  let movers: Array<RandomMover>;
+  let movers: Array<Mover>;
 
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -129,48 +130,19 @@ sketches.randomMovers = p => {
     movers = times(100).map(() => {
       const location = p.createVector(p.random(p.width), p.random(p.height));
       const velocity = p.createVector(0, 0);
-      return new RandomMover(p, location, velocity);
+      const mass = p.random(1, 3);
+      return new Mover(p, location, velocity, mass, {
+        edgeInteraction: "wrap"
+      });
     });
   };
 
   p.draw = function() {
     p.background(255);
     movers.forEach(m => {
-      m.update();
-      m.display();
+      const mag = p.random(0.2, 1);
+      m.update(p5.Vector.random2D().mult(mag));
+      m.draw();
     });
   };
 };
-
-class RandomMover {
-  constructor(
-    private p: p5,
-    private location: p5.Vector,
-    private velocity: p5.Vector,
-    private radius = 8
-  ) {}
-
-  update() {
-    const acceleration = this.p.createVector(
-      this.p.random(-1, 1),
-      this.p.random(-1, 1)
-    );
-    this.velocity = p5.Vector.add(acceleration, this.velocity);
-    this.velocity.limit(10);
-    this.location = p5.Vector.add(this.location, this.velocity);
-
-    this.location.x = wrapDimension(this.location.x, this.p.width);
-    this.location.y = wrapDimension(this.location.y, this.p.height);
-  }
-
-  display() {
-    this.p.stroke(0);
-    this.p.fill(175);
-    const diameter = this.radius * 2;
-    this.p.ellipse(this.location.x, this.location.y, diameter, diameter);
-  }
-}
-
-function wrapDimension(loc: number, size: number) {
-  return ((loc % size) + size) % size;
-}
