@@ -30,15 +30,14 @@ export class SketchManager {
     }
 
     let runningSketch: RunningSketch;
-    if (!(sketches[key] instanceof Sketch)) {
-      const sketchFunction = sketches[key] as sketchFunction;
+    const sketch = sketches[key];
+    if (sketch instanceof Sketch) {
+      runningSketch = sketch.run(this.container);
+    } else {
       runningSketch = {
-        p5Instance: new p5(sketchFunction, this.container),
+        p5Instance: new p5(sketch, this.container),
         teardown: () => {}
       };
-    } else {
-      const sketch = sketches[key] as Sketch;
-      runningSketch = sketch.run(this.container);
     }
 
     this.persistSketchKey = key;
@@ -50,10 +49,10 @@ export class SketchManager {
     this.loadSketch(this.activeSketchEntry.key);
   }
 
-  set persistSketchKey(key) {
+  private set persistSketchKey(key) {
     localStorage[this.localStorageSketchKey] = key;
   }
-  get persistSketchKey() {
+  private get persistSketchKey() {
     return localStorage[this.localStorageSketchKey];
   }
 }
@@ -74,7 +73,7 @@ export class ControlPanelManager {
 
   private initSelect() {
     const element = this.elements.select;
-    const selectedKey = this.sketchManager.persistSketchKey;
+    const selectedKey = this.sketchManager.activeSketchEntry.key;
     [...this.sketchManager.sketchKeys.entries()].forEach(([key]) => {
       const option = document.createElement("option");
       option.value = key;
