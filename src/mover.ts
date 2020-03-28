@@ -1,19 +1,37 @@
 import p5 from "p5";
 
-type edgeInteraction = "wrap" | "bounce" | undefined;
+type edgeInteraction = "wrap" | "bounce" | "none";
+type displayMode = "circle" | "pointTowardsMovement";
 
 export interface moverOptions {
   edgeInteraction?: edgeInteraction;
+  displayMode?: displayMode;
+}
+
+interface moverOptionsWithDefaults extends moverOptions {
+  displayMode: displayMode;
+  edgeInteraction: edgeInteraction;
 }
 
 export class Mover {
+  defaultOptions: moverOptionsWithDefaults = {
+    displayMode: "circle",
+    edgeInteraction: "none"
+  };
+  private options: moverOptionsWithDefaults;
+
   constructor(
     public p: p5,
     protected _position: p5.Vector,
     protected _velocity: p5.Vector,
     protected _mass = 1,
-    private options: moverOptions = {}
-  ) {}
+    options: moverOptions = {}
+  ) {
+    this.options = {
+      ...this.defaultOptions,
+      ...options
+    };
+  }
 
   update(force: p5.Vector) {
     const acceleration = Mover.calcAcceleration(force, this._mass);
@@ -36,18 +54,36 @@ export class Mover {
   }
 
   draw(offset: p5.Vector = this.p.createVector(0, 0)) {
-    this.p.stroke(0);
-    this.p.fill(175);
+    switch (this.options.displayMode) {
+      case "circle":
+        this.p.stroke(0);
+        this.p.fill(175);
 
-    const diameter = this.radius * 2;
-    let displayPos: p5.Vector;
-    if (offset) {
-      displayPos = p5.Vector.add(offset, this._position);
-    } else {
-      displayPos = this._position;
+        const diameter = this.radius * 2;
+        let displayPos: p5.Vector;
+        if (offset) {
+          displayPos = p5.Vector.add(offset, this._position);
+        } else {
+          displayPos = this._position;
+        }
+
+        this.p.ellipse(displayPos.x, displayPos.y, diameter, diameter);
+        break;
+
+      case "pointTowardsMovement":
+        const angle = this.velocity.heading();
+
+        this.p.stroke(0);
+        this.p.fill(175);
+
+        this.p.push();
+        this.p.rectMode(this.p.CENTER);
+        this.p.translate(this.position.x, this.position.y);
+        this.p.rotate(angle);
+        this.p.rect(0, 0, this.mass * 16, this.mass * 8);
+        this.p.pop();
+        break;
     }
-
-    this.p.ellipse(displayPos.x, displayPos.y, diameter, diameter);
   }
 
   get radius() {

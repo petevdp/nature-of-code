@@ -11,17 +11,20 @@ class GravityMouse extends Sketch {
 
   protected _run(p: p5) {
     let movers: Array<GravityMover>;
-    const gravity = 2.0;
+    const gravity = 0.5;
     this.gravityPoint = p.createVector(p.width / 2, p.height / 2);
 
     p.setup = function() {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.background(255);
 
-      movers = times(100).map(() => {
-        const location = p.createVector(p.random(p.width), p.random(p.height));
-        const velocity = p.createVector(0, 0);
-        const mover = new Mover(p, location, velocity);
+      movers = times(10).map(() => {
+        const location = p.createVector(p.width / 4, p.height / 4);
+        const velocity = p.createVector(p.random(0, 5), p.random(0, 5));
+        const mass = 1;
+        const mover = new Mover(p, location, velocity, mass, {
+          displayMode: "pointTowardsMovement"
+        });
         return new GravityMover(mover);
       });
     };
