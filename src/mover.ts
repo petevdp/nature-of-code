@@ -74,21 +74,19 @@ export class Mover {
     radius: number,
     edgeInteraction: edgeInteraction
   ) {
-    const velocity = p5.Vector.add(acceleration, prevVelocity);
+    const velocity = prevVelocity.copy();
     if (edgeInteraction == "bounce") {
-      const projectedPosition = p5.Vector.add(position, velocity);
-      if (
-        projectedPosition.x > p.width - radius ||
-        projectedPosition.x < 0 + radius
-      ) {
+      if (position.x > p.width - radius || position.x < 0 + radius) {
         velocity.x *= -1;
-      } else if (
-        projectedPosition.y > p.height - radius ||
-        projectedPosition.y < 0 + radius
-      ) {
+        velocity.x -= acceleration.x;
+      }
+
+      if (position.y > p.height - radius || position.y < 0 + radius) {
         velocity.y *= -1;
+        velocity.y -= acceleration.y;
       }
     }
+    velocity.add(acceleration);
 
     return velocity;
   }

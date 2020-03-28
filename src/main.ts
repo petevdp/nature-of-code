@@ -27,4 +27,4 @@ function main() {
   });
 }
 
-window.onload = main;
+window.onload = () => main();

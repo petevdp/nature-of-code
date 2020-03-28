@@ -1,7 +1,7 @@
 import p5 from "p5";
 import { startCase } from "lodash-es";
-import { sketches, Sketches } from "./sketches";
-import { Sketch, sketchFunction, RunningSketch } from "./sketch";
+import { Sketches } from "./sketches";
+import { Sketch, RunningSketch } from "./sketch";
 
 export class SketchManager {
   sketchKeys: Set<string>;
@@ -30,7 +30,7 @@ export class SketchManager {
     }
 
     let runningSketch: RunningSketch;
-    const sketch = sketches[key];
+    const sketch = this.sketches[key];
     if (sketch instanceof Sketch) {
       runningSketch = sketch.run(this.container);
     } else {
